@@ -64,24 +64,42 @@ OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
 /********************************************************************/ 
 
+#include <math.h>
+int pinOut = 10;
+
 void setup() {
   // set up the LCD's number of columns and rows:
   lcd.begin(16, 2);
-
-  // start serial port 
-  Serial.begin(9600); 
+  pinMode(10, OUTPUT);
   
   // Print a message to the LCD.
-  lcd.print("the temp is:");
   sensors.begin(); 
+  delay(2000); 
+
 }
 
 void loop() {
   // set the cursor to column 0, line 1
   // (note: line 1 is the second row, since counting begins with 0):
-  lcd.setCursor(0, 1);
   sensors.requestTemperatures();
-  Serial.println("DONE"); 
+  if(sensors.getTempCByIndex(0) >= 25.0){
+    digitalWrite(pinOut, LOW);
+    lcd.setCursor(0,0);
+    lcd.print(sensors.getTempCByIndex(0));
+    lcd.setCursor(0,1);
+    lcd.print("             ");
+    lcd.setCursor(0,1);
+    lcd.print("LET THERE BE:");
+  }
+  else{
+    digitalWrite(pinOut, HIGH);
+    lcd.setCursor(0,0);
+    lcd.print(sensors.getTempCByIndex(0));
+    lcd.setCursor(0,1);
+    lcd.print("             ");
+    lcd.setCursor(0,1);
+    lcd.print("NO LIGHT");
+  }
   delay(1000); 
-  lcd.print(sensors.getTempCByIndex(0));
+  
 }

@@ -1,7 +1,7 @@
 
 int ledPin = 8;
 int state = 0;
-int flag = 0;
+int no_message_printed = true;
 
 void setup() {
   pinMode(ledPin, OUTPUT);
@@ -12,16 +12,17 @@ void setup() {
 void loop() {
   if (Serial.available()>0){
     state = serial.read();
-    flag = 0;
+    no_message_printed = true;
   }
   if (state == 0){
     digitalWrite(ledPin, LOW);
-    if (flag == 0){
+    if (no_message_printed){
       Serial.println("LED: off");
-      flag = 1;
+      no_message_printed = false;
     }
   }
   else if (state == 1){
     digitalWrite(ledPin, HIGH);
+    Serial.println("LED: on")
   }
 }
